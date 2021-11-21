@@ -43,42 +43,45 @@ async def get_coin(request):
     if(coin == None):
         return web.Response(text="no coin found")
 
-    coinSymbol = coin + "-USDT"
-    params = {
-        'symbol': coinSymbol
-    }
+    # coinSymbol = coin + "-USDT"
+    # params = {
+    #     'symbol': coinSymbol
+    # }
 
-    kucoin_conf = request.config_dict['config']['kucoin']
-    api_key = kucoin_conf['api_key'] 
-    api_secret = kucoin_conf['api_secret']
-    api_passphrase = kucoin_conf['api_passphrase']
+    # kucoin_conf = request.config_dict['config']['kucoin']
+    # api_key = kucoin_conf['api_key'] 
+    # api_secret = kucoin_conf['api_secret']
+    # api_passphrase = kucoin_conf['api_passphrase']
 
-    url = 'https://api.kucoin.com/api/v1/market/stats'
-    now = int(time.time() * 1000)
-    str_to_sign = str(now) + 'GET' + '/api/v1/market/stats'
-    signature = base64.b64encode(
-        hmac.new(api_secret.encode('utf-8'), str_to_sign.encode('utf-8'), hashlib.sha256).digest())
-    passphrase = base64.b64encode(hmac.new(api_secret.encode('utf-8'), api_passphrase.encode('utf-8'), hashlib.sha256).digest())
-    headers = {
-        "KC-API-SIGN": signature.decode('utf-8'),
-        "KC-API-TIMESTAMP": str(now),
-        "KC-API-KEY": api_key,
-        "KC-API-PASSPHRASE": passphrase.decode('utf-8'),
-        "KC-API-KEY-VERSION": "2"
-    }
+    # url = 'https://api.kucoin.com/api/v1/market/stats'
+    # now = int(time.time() * 1000)
+    # str_to_sign = str(now) + 'GET' + '/api/v1/market/stats'
+    # signature = base64.b64encode(
+    #     hmac.new(api_secret.encode('utf-8'), str_to_sign.encode('utf-8'), hashlib.sha256).digest())
+    # passphrase = base64.b64encode(hmac.new(api_secret.encode('utf-8'), api_passphrase.encode('utf-8'), hashlib.sha256).digest())
+    # headers = {
+    #     "KC-API-SIGN": signature.decode('utf-8'),
+    #     "KC-API-TIMESTAMP": str(now),
+    #     "KC-API-KEY": api_key,
+    #     "KC-API-PASSPHRASE": passphrase.decode('utf-8'),
+    #     "KC-API-KEY-VERSION": "2"
+    # }
 
     ccxtTicker = coin + '/USDT'
     ccxtResponse = ccxt.kucoin().fetchTicker(ccxtTicker)
     ccxtOutput = ccxtResponse['last']
 
-    async with ClientSession() as session:
-        async with session.get(url,params=params,headers=headers) as resp:
-            json = await resp.json()
-            data = json.get('data', None)
-            lastBid = data['last'] if data else ['No bid found']
-            coinString = "manual last bid for {}:  {}\n".format(coin, str(lastBid))
+    coinString = "ccxt last bid for {}:  {}\n".format(coin, str(ccxtOutput))
+    return web.Response(text=coinString)
+    
+    # async with ClientSession() as session:
+    #     async with session.get(url,params=params,headers=headers) as resp:
+    #         json = await resp.json()
+    #         data = json.get('data', None)
+    #         lastBid = data['last'] if data else ['No bid found']
+    #         coinString = "manual last bid for {}:  {}\n".format(coin, str(lastBid))
             
-            coinString += "ccxt last bid for {}:  {}\n".format(coin, str(ccxtOutput))
+    #         coinString += "ccxt last bid for {}:  {}\n".format(coin, str(ccxtOutput))
             
-            return web.Response(text=coinString)
+    #         return web.Response(text=coinString)
             

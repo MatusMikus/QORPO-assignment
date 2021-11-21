@@ -69,7 +69,10 @@ async def get_coin(request):
     # }
 
     ccxtTicker = coin + '/USDT'
-    ccxtResponse = ccxt.kucoin().fetchTicker(ccxtTicker)
+    try:
+        ccxtResponse = ccxt.kucoin().fetchTicker(ccxtTicker)
+    except:
+        return web.Response(text="error: didn't find coin {} on kucoin".format(coin))
     ccxtOutput = ccxtResponse['last']
 
     coinString = "Last bid for {}:  {}\n".format(coin, str(ccxtOutput))

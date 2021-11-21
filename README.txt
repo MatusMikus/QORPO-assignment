@@ -6,4 +6,4 @@ Some thoughts behind my decisions:
 
 - for the /price/history endpoint, I have populated a MySQL database with the historical data of 3 coins: BTC, ETH, and LTC. I have added them sequentially, so the first 1500 rows or so are BTC, the next 1500 or so ETH and so on
 
-- We assume the database is present on localhost with credentials as in the sample config. Same for KuCoin API, but that is optional
+- We assume a MySQL server is running is present on localhost with credentials as in the sample config. I used MySQL Workbench/Server for testing.

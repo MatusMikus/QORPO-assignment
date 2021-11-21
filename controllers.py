@@ -1,14 +1,13 @@
 from datetime import date, datetime
-
 from sqlalchemy.sql.sqltypes import String
 from aiohttp import web, ClientSession
-import ccxt
 from sqlalchemy import select, cast, Date
-import base64
-import time
-import hmac
-import hashlib
 import models
+import ccxt
+# import base64
+# import time
+# import hmac
+# import hashlib
 
 async def default(request):
     return web.Response(text="The valid endpoints are /price/history or /price/{currency}")
@@ -71,7 +70,7 @@ async def get_coin(request):
     ccxtResponse = ccxt.kucoin().fetchTicker(ccxtTicker)
     ccxtOutput = ccxtResponse['last']
 
-    coinString = "ccxt last bid for {}:  {}\n".format(coin, str(ccxtOutput))
+    coinString = "Last bid for {}:  {}\n".format(coin, str(ccxtOutput))
     return web.Response(text=coinString)
     
     # async with ClientSession() as session:

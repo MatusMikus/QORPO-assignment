@@ -12,15 +12,14 @@ def get_config(path):
     return config
 
 config = get_config(config_path)
-
 dbConfig = config['db']
+
 async def context(app):
     engine = create_engine('mysql+mysqldb://{0}:{1}@{2}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host']))
 
     existing_databases = engine.execute("SHOW DATABASES;")
     existing_databases = [d[0] for d in existing_databases]
 
-    # Create and populate database if not exists
     if dbConfig['db_name'] not in existing_databases:
         engine.execute("CREATE DATABASE {0}".format(dbConfig['db_name']))    
         db_engine = create_engine('mysql+mysqldb://{0}:{1}@{2}/{3}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host'], dbConfig['db_name']))

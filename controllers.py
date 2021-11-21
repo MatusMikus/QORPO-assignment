@@ -21,6 +21,8 @@ async def get_price_handler(request):
         return await get_coin(request)
     
 async def get_price(request):
+    if not request.app['db']:
+        return web.Response(text="Error: couldn't connect to database")
     pageSize = 50
     offset = 0
     try:

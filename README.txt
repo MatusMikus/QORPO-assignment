@@ -1,4 +1,4 @@
-Note: Assume a MySQL server is running and configured through a 'config.yaml' file, based on 'config_sample.yaml'. Otherwise the history endpoint won't work. I have used MySQL Workbench/Server for testing on localhost, there's proof of a working example in the misc directory
+Database name is configured through config.yaml
 
 Some thoughts behind my decisions:
 

@@ -29,15 +29,16 @@ async def get_price(request):
         offset = pageSize * int(request.query.get('page',0))
     except:
         pass
-    with request.app['db'].connect() as conn:
-        cols = models.price.columns 
-        selection = select([cols.currency, cols.date.cast(Date).cast(String), cols.price])
-        cursor = conn.execute(selection
-                                .limit(pageSize)
-                                .offset(offset))
-        records = cursor.fetchall() 
-        prices = [dict(q) for q in records]
-        return web.Response(text=str(prices))
+    # with request.app['db'].connect() as conn:
+    cols = models.price.columns 
+    selection = select([cols.currency, cols.date.cast(Date).cast(String), cols.price])
+    
+    cursor = request.app['db_connect'].execute(selection
+                            .limit(pageSize)
+                            .offset(offset))
+    records = cursor.fetchall() 
+    prices = [dict(q) for q in records]
+    return web.Response(text=str(prices))
 
 async def get_coin(request):
     coin = request.match_info['endpoint']

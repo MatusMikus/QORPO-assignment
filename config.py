@@ -23,18 +23,25 @@ async def context(app):
 
         if dbConfig['db_name'] not in existing_databases:
             engine.execute("CREATE DATABASE {0}".format(dbConfig['db_name']))    
-            db_engine = create_engine('mysql+mysqldb://{0}:{1}@{2}/{3}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host'], dbConfig['db_name']))
+            db_engine = create_engine(
+                'mysql+mysqldb://{0}:{1}@{2}/{3}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host'], dbConfig['db_name']),
+                pool_size=20)
             populate_db.create_table(engine)
             populate_db.populate_file('Kucoin_BTCUSDT_d.csv',engine)
             populate_db.populate_file('Kucoin_ETHUSDT_d.csv',engine)
             populate_db.populate_file('Kucoin_LTCUSDT_d.csv',engine)
         else:
-            db_engine = create_engine('mysql+mysqldb://{0}:{1}@{2}/{3}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host'], dbConfig['db_name']))
+            db_engine = create_engine(
+                'mysql+mysqldb://{0}:{1}@{2}/{3}'.format(dbConfig['username'], dbConfig['password'], dbConfig['host'], dbConfig['db_name']),
+                pool_size=20
+            )
 
         app['db'] = db_engine
+        app['db_connect'] = db_engine.connect()
 
         yield
 
+        app['db_connect'].close()
         app['db'].dispose()
     else:
         app['db'] = None

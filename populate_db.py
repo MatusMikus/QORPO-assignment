@@ -14,3 +14,8 @@ def populate_file(fileName,engine):
                 for row in spamreader:
                     connection.execute(models.price.insert(), {"currency": row[2], "date": datetime.strptime(row[1], '%Y-%m-%d %H:%M:%S'),"price":float(row[6])})
 
+def populate_db(engine):
+    create_table(engine)
+    populate_file('Kucoin_BTCUSDT_d.csv',engine)
+    populate_file('Kucoin_ETHUSDT_d.csv',engine)
+    populate_file('Kucoin_LTCUSDT_d.csv',engine)

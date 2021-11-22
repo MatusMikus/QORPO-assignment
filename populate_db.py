@@ -1,5 +1,6 @@
 import csv
 import models 
+from datetime import datetime
 
 def create_table(engine):
     models.meta.create_all(engine)
@@ -11,5 +12,5 @@ def populate_file(fileName,engine):
                 lines = csvfile.readlines()[2:]
                 spamreader = csv.reader(lines, delimiter=',', quotechar='|')
                 for row in spamreader:
-                    connection.execute(models.price.insert(), {"currency": row[2], "date": row[1],"price":float(row[6])})
+                    connection.execute(models.price.insert(), {"currency": row[2], "date": datetime.strptime(row[1], '%Y-%m-%d %H:%M:%S'),"price":float(row[6])})
 

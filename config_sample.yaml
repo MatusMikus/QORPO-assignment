@@ -1,6 +1,2 @@
 db:
-  username: username
-  password: password
-  host: host
-  db_name: db_name
-  init_db: False
+  db_name: historical_data

@@ -19,12 +19,11 @@ async def context(app):
     db_exists = path_to_db.is_file()
     
     engine = create_engine('sqlite+pysqlite:///{}'.format(dbConfig['db_name']))
-    
-    if not db_exists:
-        populate_db(engine)
-
     app['db'] = engine
     app['db_connect'] = engine.connect()
+
+    if not db_exists:
+        populate_db(app['db'],app['db_connect']) #reuse connection
 
     yield
 
